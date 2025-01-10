@@ -23,3 +23,4 @@ samples, guidance on mobile development, and a full API reference.
 # easyreserve
 # easyreserve-bookable
 # easyreserve-bookable
+# bookable-easyreserve
