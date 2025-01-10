@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easyreserve/pages/services/database.dart';
+import 'package:easyreserve/pages/detail_page.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -8,6 +11,112 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Stream? serviceStream;
+
+  ontheload()async{
+    serviceStream = await DatabaseMethods().getallServices();
+    setState(() {
+      
+    });
+  }
+  @override
+  void initState() {
+    ontheload();
+    super.initState();
+    
+  }
+  Widget allServices(){
+    return StreamBuilder(
+      stream: serviceStream, 
+      builder: (context, AsyncSnapshot snapshot){
+        return snapshot.hasData
+            ? ListView.builder(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              itemCount: snapshot.data.docs.length,
+              itemBuilder: (context, index){
+                DocumentSnapshot ds = snapshot.data.docs[index];
+                return GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                    DetailPage(
+                      image: ds["Image"], 
+                      name: ds["Name"], 
+                      detail: ds["Detail"], 
+                      price: ds["Price"])));
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                                    margin: EdgeInsets.only(right: 20.0),
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(),
+                                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.asset("assets/images/company_logo/logo.png", 
+                          height: 200, 
+                          width: MediaQuery.of(context).size.width,
+                          fit: BoxFit.cover,
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 5.0, top:5.0),
+                          width: 100,
+                          decoration: BoxDecoration(color: Colors.white),
+                          //change company name here
+                            child: Text(
+                              "Effect Limited",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.bold),
+                          ),                        
+                      ),
+                    ],    
+                  ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                  Text(ds["Name"],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold
+                    ),
+                  ),
+                                Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: Text(ds["Price"],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold
+                    ),
+                  ),
+                                ),
+                                ],
+                              ),
+                              SizedBox(height: 10.0,),
+                              Row(children: [
+                                Icon(Icons.location_on),
+                                //add company location
+                                Text(
+                  "F/RM D BLK 1 6/F KINGLEY IND BLDG 35 \nYIP KAN STREET WONG CHUK HANG HK",
+                  style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14.0,)
+                                ),
+                              ])]),
+                );
+            })
+            :Container();
+      });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,14 +133,14 @@ class _HomeState extends State<Home> {
             Row(
               children: [
                 Icon(Icons.location_on_outlined),
-                Text("Jiombang, East Jave", style: TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.w500))
+                Text("Hong Kong", style: TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.w500))
               ],
             ),
             SizedBox(height: 20.0,),
             Row(
               children: [
                 SizedBox(height: 30.0,),
-                Text("Hello, users", style: TextStyle(color: Colors.black, fontSize: 25.0, fontWeight: FontWeight.bold),
+                Text("Welcome back!!", style: TextStyle(color: Colors.black, fontSize: 25.0, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -148,49 +257,11 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Company Services Details", style: TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),),
-                Text("See all",style: TextStyle(color: Colors.blueGrey, fontSize: 16.0)),
               ],
             ),
-            Container(
-              margin: EdgeInsets.only(right: 20.0),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(),
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.asset("assets/images/company_logo/logo.png", 
-                    height: 200, 
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 5.0, top:5.0),
-                    width: 100,
-                    decoration: BoxDecoration(color: Colors.white),
-                    //change company name here
-                      child: Text(
-                        "Effect Limited",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold),
-                        ),                        
-                  ),
-              ],    
-              ),
-            ),
-            Row(children: [
-              Icon(Icons.location_on),
-              //add company location
-              Text(
-                "F/RM D BLK 1 6/F KINGLEY IND BLDG 35 \nYIP KAN STREET WONG CHUK HANG HK",
-                style: TextStyle(
-                color: Colors.black,
-                fontSize: 14.0,)
-              )
-            ],)
+
+            allServices(),
+            
            ],
         ),
       ),

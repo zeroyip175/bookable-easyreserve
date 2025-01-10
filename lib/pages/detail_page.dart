@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class DetailPage extends StatefulWidget {
-  const DetailPage({super.key});
+  String image, name, detail,price;
+  DetailPage({super.key, required this.image,required this.name,required this.detail, required this.price});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
 }
 
 class _DetailPageState extends State<DetailPage> {
-  String _servicefee = "HKD?"; 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +84,7 @@ class _DetailPageState extends State<DetailPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "About Company Service",
+                            "Our Service",
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 25.0,
@@ -91,10 +92,11 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                           ),
                         ),
+          
             SizedBox(height: 10.0,),
             Padding(padding: const EdgeInsets.only(left: 20.0),
             child: Text(
-              "Service Detial:",
+              "Service Type:\n" + widget.name,
               style: TextStyle(
                 color: Colors.black87,
                 fontSize: 18.0,
@@ -105,18 +107,7 @@ class _DetailPageState extends State<DetailPage> {
             SizedBox(height: 10.0,),
             Padding(padding: const EdgeInsets.only(left: 20.0),
             child: Text(
-              "Service: Retial/POS/Computer/Engineer",
-              style: TextStyle(
-                color: Colors.black87,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),               
-            ),
-            SizedBox(height: 10.0,),
-            Padding(padding: const EdgeInsets.only(left: 20.0),
-            child: Text(
-              "Desciption: \nLorem Ipsum is simply dummy text",
+              "Desciption: \n" + widget.detail,
               style: TextStyle(
                 color: Colors.black87,
                 fontSize: 16.0,
@@ -128,7 +119,7 @@ class _DetailPageState extends State<DetailPage> {
             Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: Text(
-                "Amount: \n" + _servicefee,
+                "Amount: \n" + widget.price,
                 style: TextStyle(
                 color: Colors.black87,
                 fontSize: 16.0,
